@@ -23,6 +23,7 @@ function_update()
             mysql -h"${CONFIG_MYSQL_HOST}" -u"${CONFIG_MYSQL_USER}" -p"${CONFIG_MYSQL_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS ${CONFIG_MYSQL_DATABASE} DEFAULT CHARACTER SET utf8 DEFAULT COLLATE utf8_general_ci"
             mysql -h"${CONFIG_MYSQL_HOST}" -u"${CONFIG_MYSQL_USER}" -p"${CONFIG_MYSQL_PASSWORD}" -D${CONFIG_MYSQL_DATABASE} < ${FILE_PATH}/update.sql
             rm -f ${FILE_PATH}/update.sql
+            echo "$SQLHASH" >> "${FILE_PATH}/.update.history.log"
         fi
     else
         echo 'There is no sql file to be executed'
