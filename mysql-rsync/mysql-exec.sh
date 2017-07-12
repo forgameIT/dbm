@@ -12,11 +12,11 @@ UNIXTIME=`date "+%s"`
 
 function_update()
 {
-    if [[ -f ${FILE_PATH}/update.sql ]]; then
+    if [ -f "${FILE_PATH}/update.sql" ]; then
         command -v mysql >/dev/null 2>&1 ||  (apt-get update && apt-get install -y mysql-client)
 
         SQLHASH=`md5sum ${FILE_PATH}/update.sql|cut -d ' ' -f1`
-        if [ ! -f ${FILE_PATH}/.update.history.log ]; then
+        if [ ! -f "${FILE_PATH}/.update.history.log" ]; then
             touch ${FILE_PATH}/.update.history.log
         fi
         if [ -z `cat ${FILE_PATH}/.update.history.log|grep $SQLHASH` ]; then
@@ -26,7 +26,8 @@ function_update()
             echo "$SQLHASH" >> "${FILE_PATH}/.update.history.log"
         fi
     else
-        echo 'There is no sql file to be executed'
+        echo "The file ${FILE_PATH}/update.sql is not found!"
+        exit 1
     fi    
 }
 
