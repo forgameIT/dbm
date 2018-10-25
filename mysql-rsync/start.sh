@@ -14,10 +14,14 @@ if [ -n "$MYSQL_HOST" -a -n "$MYSQL_USER" -a -n "$MYSQL_PASSWORD" ]; then
 		-e "s/\$5/'${MYSQL_DATABASE}'/g" \
 		-e "s/\$6/'${BACKUP_PREFIX}'/g" \
 		-e "s/\$7/'\/work\/sql'/g" \
+		-e "s/\$8/'${MYSQL_PORT}'/g" \
 		/work/sh/mysql-exec.sh -i
-	(cat /etc/cron.d/cron;echo "$BACKUP_TIME /bin/bash /work/sh/mysql-exec.sh backup >>/work/logs/backup.log 2>&1") 2>&1 | uniq > /etc/cron.d/cron 
-	crontab /etc/cron.d/cron	
+	if [ -n "$CRON" ]; then
+		(cat /etc/cron.d/cron;echo "$BACKUP_TIME /bin/bash /work/sh/mysql-exec.sh backup >>/work/logs/backup.log 2>&1") 2>&1 | uniq > /etc/cron.d/cron 
+		crontab /etc/cron.d/cron
+	fi	
 fi
+
 
 if [ -n "$RSYNC_HOST" -a -n "$RSYNC_USER" -a -n "$RSYNC_PASSWORD" ]; then 
     echo $RSYNC_PASSWORD > /root/rsync.secrets
